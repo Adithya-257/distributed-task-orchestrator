@@ -1,0 +1,11 @@
+{
+  "name": "ai-orchestrator",
+  "version": "1.0.0",
+  "description": "Distributed AI task orchestration system",
+  "private": true,
+  "scripts": {
+    "dev:api": "cd api-service && npm run dev",
+    "dev:worker": "cd worker-service && npm run dev",
+    "migrate": "node migrations/migrate.js"
+  }
+}
