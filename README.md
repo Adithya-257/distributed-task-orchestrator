@@ -120,7 +120,7 @@ ai-orchestrator/
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/ai-orchestrator.git
+git clone https://github.com/Adithya-257/distributed-task-orchestrator.git
 cd ai-orchestrator
 ```
 
