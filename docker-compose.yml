@@ -23,6 +23,7 @@ services:
       POSTGRES_DB: orchestrator
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./api-service/src/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U admin -d orchestrator"]
       interval: 5s
