@@ -19,7 +19,7 @@
 
 Most AI applications call a model and wait. This system doesn't.
 
-Instead, clients submit jobs and get an immediate response with a job ID. A distributed worker pool picks up jobs from a Redis priority queue, calls the Groq LLaMA 3.3 70B model, and writes results back to PostgreSQL. Clients poll for results or monitor live via the React dashboard.
+Instead, clients submit jobs and get an immediate response with a job ID. A distributed worker pool picks up jobs from a Redis priority queue, calls the Groq-hosted gpt-oss-120b model, and writes results back to PostgreSQL. Clients poll for results or monitor live via the React dashboard.
 
 This architecture mirrors how companies like OpenAI, Anthropic, and Scale AI handle high-throughput inference workloads in production.
 
@@ -49,7 +49,7 @@ This architecture mirrors how companies like OpenAI, Anthropic, and Scale AI han
                               ▼                             ▼
                      ┌─────────────────┐         ┌─────────────────┐
                      │   Groq API      │         │   PostgreSQL    │
-                     │ LLaMA 3.3 70B   │         │  (job results)  │
+                     │ gpt-oss-120b    │         │  (job results)  │
                      └─────────────────┘         └─────────────────┘
 ```
 
@@ -77,10 +77,11 @@ This architecture mirrors how companies like OpenAI, Anthropic, and Scale AI han
 | API Framework | Express.js |
 | Queue | BullMQ + Redis |
 | Database | PostgreSQL |
-| AI Model | LLaMA 3.3 70B via Groq |
+| AI Model | gpt-oss-120b via Groq |
 | Frontend | React + Vite |
 | Monitoring | Bull Board |
 | Containerization | Docker + Docker Compose |
+| Cloud | AWS EC2 |
 | Runtime | Node.js 22 |
 
 ---
@@ -88,7 +89,7 @@ This architecture mirrors how companies like OpenAI, Anthropic, and Scale AI han
 ## Project Structure
 
 ```bash
-ai-orchestrator/
+distributed-task-orchestrator/
 ├── api-service/              # Express API — job submission & retrieval
 │   └── src/
 │       ├── routes/           # REST endpoints
@@ -121,7 +122,7 @@ ai-orchestrator/
 1. Clone the repository
 ```bash
 git clone https://github.com/Adithya-257/distributed-task-orchestrator.git
-cd ai-orchestrator
+cd distributed-task-orchestrator
 ```
 
 2. Create root `.env` file
@@ -145,6 +146,23 @@ npm run dev
 - **Dashboard** → http://localhost:5173
 - **API** → http://localhost:3000
 - **Queue Monitor** → http://localhost:3000/admin/queues
+
+---
+
+## Deployment (AWS EC2)
+
+Deployed on an AWS EC2 instance (Ubuntu, t3.micro) using Docker Compose.
+
+1. Launch an EC2 instance and configure the Security Group: SSH (22) from my IP only, plus ports 3000 (API) and 5173 (dashboard). Postgres (5432) and Redis (6379) are not exposed.
+2. SSH in and install Docker, Docker Compose and Git
+3. Clone the repo and create the `.env` file with `GROQ_API_KEY`
+4. Start the backend: `docker compose up --build -d`
+5. Start the dashboard: `cd dashboard && npm install && npm run dev -- --host 0.0.0.0`
+6. Access the dashboard at `http://<ec2-public-ip>:5173`
+
+Dashboard running on EC2 after a 15-job stress test (15/15 completed):
+
+![Running on EC2](<(image.png)>)
 
 ---
 
