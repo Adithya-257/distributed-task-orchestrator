@@ -162,7 +162,8 @@ Deployed on an AWS EC2 instance (Ubuntu, t3.micro) using Docker Compose.
 
 Dashboard running on EC2 after a 15-job stress test (15/15 completed):
 
-![Running on EC2](<(image.png)>)
+![Running on EC2](<<img width="1600" height="859" alt="image" src="https://github.com/user-attachments/assets/5fe238ff-bb15-4d56-9284-f48acc97a034" />
+>)
 
 ---
 
